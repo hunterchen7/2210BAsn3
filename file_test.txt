@@ -1,0 +1,4 @@
+apple apple apple apple
+banana banana
+orange apple orange orange
+pear

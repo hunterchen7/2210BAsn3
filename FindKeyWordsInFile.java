@@ -4,27 +4,18 @@ import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.Comparator;
 public class FindKeyWordsInFile {
-    public static void main(String[] args) {
-        if (args.length != 3) {
-            System.err.println("Usage: java FindKeyWordsInFile k file.txt MostFrequentEnglishWords.txt");
-            System.exit(1);
-        }
+    static AVLTree<String, Integer> wordFrequencies = new AVLTree<>();
+    static AVLTree<String, Boolean> englishWords = new AVLTree<>();
+    static AVLTree<String, Integer> keywordFrequencies = new AVLTree<>();    
 
-        int k = Integer.parseInt(args[0]);
-        String inputFileName = args[1];
-        String englishWordsFileName = args[2];
-        
-        AVLTree<String, Integer> wordFrequencies = new AVLTree<>();
-        AVLTree<String, Void> englishWords = new AVLTree<>();
-        AVLTree<String, Integer> keywordFrequencies = new AVLTree<>();
-        
+    FindKeyWordsInFile(int k, String inputFileName, String englishWordsFileName) {
         try {
             
             try {
                 BufferedReader englishWordsReader = new BufferedReader(new FileReader(englishWordsFileName));
                 String word = "";
                 while ((word = englishWordsReader.readLine()) != null) {
-                    englishWords.put(word, null);
+                    englishWords.put(word.toLowerCase(), true);
                 }
                 englishWordsReader.close();                
             } catch (Exception e) {
@@ -39,9 +30,10 @@ public class FindKeyWordsInFile {
                 while ((line = targetReader.readLine()) != null) {
                     String[] words = line.split(" ");
                     for (String w : words) {
-                        w = w.toLowerCase();
                         // strip punctuation, accomplishments. is the same as accomplishments, numbers remain readable without commas
                         w = w.replaceAll("\\p{Punct}", ""); 
+                        // convert to lower case if it's not the word "I"
+                        w = w.toLowerCase();
                         if (w.length() > 0) {
                             if (wordFrequencies.get(w) == null) {
                                 wordFrequencies.put(w, 1);
@@ -56,8 +48,7 @@ public class FindKeyWordsInFile {
                 System.out.println("Error reading " + inputFileName);
             }
 
-
-            //Part 2
+                        //Part 2
             // function name => findKMostFrequentWords
 
             PriorityQueue<KeyFreqPair> pq = new PriorityQueue<>(new WordComparator());
@@ -88,17 +79,35 @@ public class FindKeyWordsInFile {
                 KeyFreqPair item = pq.poll();
                 String key = item.key;
                 int freq = item.freq;
-                if (englishWords.get(key) == null) {
-                    keywordFrequencies.put(key, freq);
+                if (englishWords.get(key) == null) { // if it's in frequent words this will give true
+                    keywordFrequencies.put(key, freq); // insert if not in frequent words
                     inserted++;
                 }
             }
-
-            keywordFrequencies.inOrderTraversal();
             
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public static void main(String[] args) {
+        if (args.length != 3) {
+            System.err.println("Usage: java FindKeyWordsInFile k file.txt MostFrequentEnglishWords.txt");
+            System.exit(1);
+        }
+
+        int k = Integer.parseInt(args[0]);
+        new FindKeyWordsInFile(k, args[1], args[2]);
+
+        keywordFrequencies.inOrderTraversal();
+
+    }
+
+    public static void printWordFrequencies() {
+        wordFrequencies.inOrderTraversal();
+    }
+
+    public static void printKeywordFrequencies() {
+        keywordFrequencies.inOrderTraversal();
     }
 
 }
