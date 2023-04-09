@@ -129,13 +129,14 @@ public class AVLTree<Key extends Comparable<Key>, Value> {
         return node;
     }
 
-
+    // returns arrayList of keys in order
     public ArrayList<String> getKeys() {
         ArrayList<String> keys = new ArrayList<>();
         inOrderTraversal(root, keys);
         return keys;
     }
 
+    // same as normal inOrderTraversal but adds keys to arraylist instead of printing
     private void inOrderTraversal(Node node, ArrayList<String> keys) {
         if (node != null) {
             inOrderTraversal(node.left, keys);

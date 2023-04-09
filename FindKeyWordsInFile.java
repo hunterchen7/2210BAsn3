@@ -48,16 +48,17 @@ public class FindKeyWordsInFile {
                 System.out.println("Error reading " + inputFileName);
             }
 
-                        //Part 2
+            //Part 2
             // function name => findKMostFrequentWords
 
             PriorityQueue<KeyFreqPair> pq = new PriorityQueue<>(new WordComparator());
+            // priority queue uses it's own object called KeyFreqPair
             
             ArrayList<String> keys = wordFrequencies.getKeys(); // get keys is in order, so this array list is also in order
             // keys are returned as a string in the form of "frequency word"
             // this way it's inserted into the priority queue in order
 
-            for (String key : keys) {
+            for (String key : keys) { // add every key to the priority queue as a KeyFreqPair
                 pq.add(
                     new KeyFreqPair(
                         key, 
@@ -76,7 +77,7 @@ public class FindKeyWordsInFile {
             // function name => filterCommonEnglishWords
             int inserted = 0;
             while (!pq.isEmpty() && inserted < k) {
-                KeyFreqPair item = pq.poll();
+                KeyFreqPair item = pq.poll(); // get top item of pq
                 String key = item.key;
                 int freq = item.freq;
                 if (englishWords.get(key) == null) { // if it's in frequent words this will give true
@@ -84,7 +85,6 @@ public class FindKeyWordsInFile {
                     inserted++;
                 }
             }
-            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -118,6 +118,7 @@ class WordComparator implements Comparator<KeyFreqPair> {
     }
 }
 
+// class to hold key and frequency together, freq is compared by our comparator to insert into pq
 class KeyFreqPair {
     String key;
     int freq;
